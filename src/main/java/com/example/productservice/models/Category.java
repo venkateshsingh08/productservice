@@ -11,8 +11,6 @@ import lombok.Setter;
 @Setter
 @Entity
 public class Category extends BaseModel{
-
-
     private String name;
     private String description;
     @OneToMany(mappedBy = "category")
