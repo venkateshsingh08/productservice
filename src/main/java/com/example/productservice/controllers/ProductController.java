@@ -9,6 +9,7 @@ import com.example.productservice.services.ProductService;
 import java.util.ArrayList;
 import java.util.List;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.http.HttpStatusCode;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.DeleteMapping;
@@ -25,7 +26,8 @@ public class ProductController {
     private ProductService productService ;
 
     @Autowired
-    public ProductController(ProductService productService) {
+    public ProductController(@Qualifier("productDbService") ProductService productService) {
+
         this.productService = productService;
     }
 
