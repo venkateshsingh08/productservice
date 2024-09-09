@@ -3,6 +3,7 @@ package com.example.productservice.controllers;
 
 import com.example.productservice.dtos.ProductRequestDto;
 import com.example.productservice.dtos.ProductResponseDto;
+import com.example.productservice.exceptions.ProductNotFoundException;
 import com.example.productservice.models.Category;
 import com.example.productservice.models.Product;
 import com.example.productservice.services.ProductService;
@@ -32,11 +33,20 @@ public class ProductController {
     }
 
     @GetMapping("/product/{id}")
-    public ProductResponseDto getProductById(@PathVariable("id")Long id){
+    public ProductResponseDto getProductById(@PathVariable("id")Long id)  {
 
-        Product product = productService.getProductById(id);
-        ProductResponseDto productResponseDto = new ProductResponseDto();
-        return productResponseDto.fromProduct(product);
+        try {
+            ProductResponseDto productResponseDto = new ProductResponseDto();
+            Product product = productService.getProductById(id);
+            return productResponseDto.fromProduct(product);
+
+        }
+        catch(ProductNotFoundException productNotFoundException){
+            return null;
+        }
+
+
+
 
 //        ProductResponseDto dummy = new ProductResponseDto();
 //        dummy.setId(1L);
@@ -85,7 +95,7 @@ public class ProductController {
     }
 
     @PatchMapping("/product/{id}")
-    public Product partialUpdateProduct(@PathVariable("id")Long id,@RequestBody ProductRequestDto productRequestDto){
+    public Product partialUpdateProduct(@PathVariable("id")Long id,@RequestBody ProductRequestDto productRequestDto) throws ProductNotFoundException {
 
         Product p = new Product();
         p.setId(id);

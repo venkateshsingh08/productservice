@@ -1,5 +1,6 @@
 package com.example.productservice.services;
 
+import com.example.productservice.exceptions.ProductNotFoundException;
 import com.example.productservice.models.Category;
 import com.example.productservice.models.Product;
 import com.example.productservice.repositories.CategoryRepository;
@@ -20,13 +21,19 @@ public class ProductDBService implements ProductService{
         this.categoryRepository = categoryRepository;
     }
     @Override
-    public Product getProductById(Long id) {
-        return null;
+    public Product getProductById(Long id) throws ProductNotFoundException {
+
+        Optional<Product> product = productRepository.findById(id);
+        if(product.isPresent()){
+            return product.get();
+        }
+        else throw new ProductNotFoundException("Product with id: " +id +" Not Found");
     }
 
     @Override
     public List<Product> getAllProducts() {
-        return null;
+
+        return productRepository.findAll();
     }
 
     @Override
@@ -47,8 +54,38 @@ public class ProductDBService implements ProductService{
     }
 
     @Override
-    public Product partialUpdateProduct(Long id, Product p) {
-        return null;
+    public Product partialUpdateProduct(Long id, Product p) throws ProductNotFoundException {
+
+        Optional<Product> productOptional = productRepository.findById(id);
+
+        if(!productOptional.isPresent()){
+            throw new ProductNotFoundException("Product does not exist");
+        }
+
+        Product productToUpdate = productOptional.get();
+        if(p.getTitle()!=null){
+            productToUpdate.setTitle(p.getTitle());
+        }
+
+        if(p.getDescription()!=null){
+            productToUpdate.setTitle(p.getDescription());
+        }
+
+        if(p.getImageUrl()!=null){
+            productToUpdate.setImageUrl(p.getImageUrl());
+        }
+
+        if(p.getPrice()!=null){
+            productToUpdate.setPrice(p.getPrice());
+        }
+
+        if(p.getCategory()!=null){
+            productToUpdate.setCategory(
+                    getCategoryForDB(p.getCategory().getName())
+            );
+        }
+
+        return productRepository.save(productToUpdate);
     }
 
     @Override
@@ -63,7 +100,8 @@ public class ProductDBService implements ProductService{
         if(categoryOptional.isEmpty()){
             Category category = new Category();
             category.setName(categoryName);
-            return categoryRepository.save(category);
+            return category;
+            //return categoryRepository.save(category);
         }
         return categoryOptional.get();
     }
