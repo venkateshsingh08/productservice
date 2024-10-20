@@ -21,4 +21,6 @@ public class Product extends BaseModel{
     private String imageUrl;
     @ManyToOne(cascade = {CascadeType.PERSIST})
     private Category category;
+
+    //private String abs; -> Gives error because not present in db.
 }

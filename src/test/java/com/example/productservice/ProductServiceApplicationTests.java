@@ -9,6 +9,7 @@ import java.util.Optional;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
+import org.springframework.transaction.annotation.Transactional;
 
 @SpringBootTest
 class ProductServiceApplicationTests {
@@ -43,6 +44,24 @@ class ProductServiceApplicationTests {
     public void method_three(){
         List<Product> product = productRepository.getProductBasedOnCategoryNames("electronics");
         System.out.println(product);
+    }
+
+    @org.junit.Test
+    @Transactional
+    public void getCategory(){
+        Optional<Category> category = categoryRepository.findById(1L);
+        System.out.println(category.get().getProducts());
+    }
+
+    @Test
+    @Transactional
+    public void nplusProblem(){
+        List<Category> categories = categoryRepository.findAll();
+        for(Category category: categories){
+            for(Product product: category.getProducts()){
+                System.out.println(product.getTitle());
+            }
+        }
     }
 
 }
