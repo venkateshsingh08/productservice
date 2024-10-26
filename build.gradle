@@ -36,6 +36,8 @@ dependencies {
     implementation 'com.mysql:mysql-connector-j:8.2.0'
     implementation group: 'org.flywaydb', name: 'flyway-core', version: '10.11.1'
     implementation group: 'org.flywaydb', name: 'flyway-mysql', version: '10.11.1'
+    implementation group: 'org.springframework.boot', name: 'spring-boot-starter-oauth2-resource-server'
+
 
 
 
