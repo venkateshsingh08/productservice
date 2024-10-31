@@ -32,7 +32,7 @@ public class ProductController {
     private AuthenticationCommons authenticationCommons;
 
     @Autowired
-    public ProductController(@Qualifier("fakeStoreService") ProductService productService,AuthenticationCommons authenticationCommons) {
+    public ProductController(@Qualifier("productDbService") ProductService productService,AuthenticationCommons authenticationCommons) {
 
         this.productService = productService;
         this.authenticationCommons = authenticationCommons;
@@ -41,10 +41,10 @@ public class ProductController {
     @GetMapping("/product/{id}")
     public ProductResponseDto getProductById(@PathVariable("id") Long id, @RequestHeader("Authorization") String token) throws InvalidTokenException {
 
-        UserDto userDto = authenticationCommons.validateToken(token);
-        if(userDto==null){
-            throw new InvalidTokenException("Invalid Token");
-        }
+//        UserDto userDto = authenticationCommons.validateToken(token);
+//        if(userDto==null){
+//            throw new InvalidTokenException("Invalid Token");
+//        }
 
         try {
             ProductResponseDto productResponseDto = new ProductResponseDto();

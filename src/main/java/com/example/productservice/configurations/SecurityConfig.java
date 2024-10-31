@@ -16,12 +16,22 @@ public class SecurityConfig {
 
     @Bean
     public SecurityFilterChain filterChain(HttpSecurity http) throws Exception {
+//        http
+//                .authorizeHttpRequests(authorize -> authorize
+//                        .requestMatchers("/product").access(hasScope("USEREMAIL"))
+//                        .anyRequest().authenticated()
+//                )
+//                .oauth2ResourceServer(OAuth2ResourceServerConfigurer::jwt);
+
         http
                 .authorizeHttpRequests(authorize -> authorize
-                        .requestMatchers("/product").access(hasScope("USEREMAIL"))
-                        .anyRequest().authenticated()
+                        .anyRequest().permitAll()
                 )
-                .oauth2ResourceServer(OAuth2ResourceServerConfigurer::jwt);
+                .cors().disable()
+                .csrf().disable();
+
+
+
 
 
         return http.build();
