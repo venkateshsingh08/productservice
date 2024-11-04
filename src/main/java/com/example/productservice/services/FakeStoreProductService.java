@@ -6,6 +6,7 @@ import com.example.productservice.models.Product;
 import java.util.ArrayList;
 import java.util.List;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.redis.core.RedisTemplate;
 import org.springframework.http.HttpEntity;
 import org.springframework.http.HttpMethod;
 import org.springframework.http.ResponseEntity;
@@ -17,21 +18,30 @@ public class FakeStoreProductService implements ProductService{
 
 
     private RestTemplate restTemplate;
+    private RedisTemplate<String,Object> redisTemplate;
 
     @Autowired
-    public FakeStoreProductService(RestTemplate restTemplate) {
+    public FakeStoreProductService(RestTemplate restTemplate,RedisTemplate redisTemplate) {
         this.restTemplate = restTemplate;
+        this.redisTemplate = redisTemplate;
     }
 
     @Override
     public Product getProductById(Long id) {
+
+        Product productFromCache = (Product)redisTemplate.opsForValue().get(String.valueOf(id));
+        if(productFromCache != null){
+            return productFromCache;
+        }
 
         FakeStoreProductResponseDto responseDto = restTemplate.getForObject(
                 "https://fakestoreapi.com/products/" + id,
                 FakeStoreProductResponseDto.class
         );
 
-        return responseDto.toProduct();
+        Product product =  responseDto.toProduct();
+        redisTemplate.opsForValue().set(String.valueOf(id),product);
+        return product;
     }
 
     @Override
