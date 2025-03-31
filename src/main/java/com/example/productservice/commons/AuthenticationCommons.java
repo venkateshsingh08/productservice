@@ -21,6 +21,7 @@ public class AuthenticationCommons {
 
     public UserDto validateToken(String token){
 
+        System.out.println("Validating");
         if(token==null){
             return null;
         }
